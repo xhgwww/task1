@@ -10,6 +10,11 @@ import matplotlib.pyplot as plt
 #获得神奇的iris数据集
 dataset = datasets.load_iris()
 
+print("属性数据：")
+print(dataset.data)
+print("种类数据：")
+print(dataset.target)
+
 input = dataset.data
 label = dataset.target
 #善用print功能,观察数据集的特点哦,它分为data和target两个部分,属性和种类分别是用哪些数据表示的呢?想清楚之后就可以继续往下啦!
