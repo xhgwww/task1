@@ -53,9 +53,9 @@ def cost(y_pred, y_true):
 
 
 # 定义两层的神经网络模型
-class TwoLayerANN(torch.nn.Module):
+class ANN(torch.nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
-        super(TwoLayerANN, self).__init__()
+        super(ANN, self).__init__()
         self.fc1 = torch.nn.Linear(input_size, hidden_size)
         self.fc2 = torch.nn.Linear(hidden_size, output_size)
 
@@ -79,7 +79,7 @@ if __name__ == '__main__':
     lambda_reg = 0.01
 
     # 初始化网络模型
-    model = TwoLayerANN(input_size, hidden_size, output_size)
+    model = ANN(input_size, hidden_size, output_size)
 
     # 设置学习率、循环次数等超参数
     learning_rate = 0.1
