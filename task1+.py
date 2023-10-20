@@ -36,7 +36,7 @@ X_test_standardized = scaler.transform(X_test)
 X_train_standardized, y_train = Under_sampler.fit_resample(X_train_standardized, y_train)
 
 # 创建决策树分类器对象
-clf = DecisionTreeClassifier(max_depth=8, min_samples_split=4, min_samples_leaf=7)
+clf = DecisionTreeClassifier(max_depth=8, min_samples_split=4, min_samples_leaf=7)  # 正则化（预剪枝）
 
 # 拟合（训练）决策树分类器
 clf.fit(X_train_standardized, y_train)
