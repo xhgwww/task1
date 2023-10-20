@@ -1,14 +1,13 @@
 import torch
 import torchvision
-import numpy as np
 import matplotlib.pyplot as plt
 import pickle
+
 
 # 定义loadImageData函数，用于读取手写数字图片数据，并进行训练集和测试集的划分
 def loadImageData():
     transform = torchvision.transforms.Compose([
         torchvision.transforms.ToTensor(),
-        torchvision.transforms.Normalize((0.1307,), (0.3081,))
     ])
 
     trainset = torchvision.datasets.MNIST(
@@ -18,6 +17,12 @@ def loadImageData():
         transform=transform
     )
 
+    sample_image, _ = trainset[89]  # 获取训练集中的第一张图片
+    plt.imshow(sample_image.squeeze(), cmap='gray')
+    plt.axis('off')
+    plt.show()
+    print(sample_image.shape)  # 打印张量的形状
+
     testset = torchvision.datasets.MNIST(
         root='./data',
         train=False,
@@ -25,15 +30,17 @@ def loadImageData():
         transform=transform
     )
 
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=64, shuffle=True)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=64, shuffle=False)
+    trainloader = torch.utils.data.DataLoader(trainset, batch_size=1, shuffle=True)
+    testloader = torch.utils.data.DataLoader(testset, batch_size=1, shuffle=False)
 
     return trainloader, testloader
+
 
 # 对训练样本和测试样本使用统一的均值、标准差进行归一化
 def normalize(x, mean, std):
     x_normed = (x - mean) / std
     return x_normed
+
 
 # 定义OneHotEncoder函数，对输出标签进行独热编码
 def OneHotEncoder(y):
@@ -41,13 +48,17 @@ def OneHotEncoder(y):
     y_onehot.scatter_(1, y.unsqueeze(1), 1)
     return y_onehot
 
+
 # 定义sigmoid激活函数
 def sigmoid(x):
     return 1 / (1 + torch.exp(-x))
 
+
 # 定义cost函数
 def cost(y_pred, y_true):
     return torch.mean((y_pred - y_true) ** 2)
+
+
 
 # 定义trainANN函数，用于训练一轮ANN，包括前向传播和反向传播过程，更新权重和偏置。
 def trainANN(X, Y, W1, b1, W2, b2, lambda_reg, learning_rate):
@@ -56,7 +67,7 @@ def trainANN(X, Y, W1, b1, W2, b2, lambda_reg, learning_rate):
     A1 = sigmoid(Z1)
     Z2 = torch.matmul(A1, W2) + b2
     A2 = sigmoid(Z2)
-    
+
     # 反向传播
     dZ2 = A2 - Y
     dW2 = torch.matmul(A1.T, dZ2) / X.shape[0] + lambda_reg * W2
@@ -65,14 +76,15 @@ def trainANN(X, Y, W1, b1, W2, b2, lambda_reg, learning_rate):
     dZ1 = dA1 * (sigmoid(Z1) * (1 - sigmoid(Z1)))
     dW1 = torch.matmul(X.T, dZ1) / X.shape[0] + lambda_reg * W1
     db1 = torch.sum(dZ1, axis=0, keepdims=True) / X.shape[0]
-    
+
     # 更新权重和偏置
     W2 = W2 - learning_rate * dW2
     b2 = b2 - learning_rate * db2
     W1 = W1 - learning_rate * dW1
     b1 = b1 - learning_rate * db1
-    
+
     return W1, b1, W2, b2
+
 
 # 定义predictionANN函数，用于对输入数据进行预测
 def predictANN(X, W1, b1, W2, b2):
@@ -82,11 +94,13 @@ def predictANN(X, W1, b1, W2, b2):
     A2 = sigmoid(Z2)
     return A2
 
+
 # 定义computeAcc函数，用于计算模型的准确率
 def computeAcc(X, Y, W1, b1, W2, b2):
     Y_pred = predictANN(X, W1, b1, W2, b2)
     acc = (torch.argmax(Y_pred, axis=1) == torch.argmax(Y, axis=1)).float().mean()
     return acc
+
 
 # 主函数部分
 if __name__ == '__main__':
@@ -100,9 +114,9 @@ if __name__ == '__main__':
     lambda_reg = 0.01
 
     # 初始化网络参数
-    W1 = torch.randn(input_size, hidden_size) / np.sqrt(input_size)
+    W1 = torch.randn(input_size, hidden_size)
     b1 = torch.zeros(1, hidden_size)
-    W2 = torch.randn(hidden_size, output_size) / np.sqrt(hidden_size)
+    W2 = torch.randn(hidden_size, output_size)
     b2 = torch.zeros(1, output_size)
 
     # 设置学习率、循环次数等超参数
