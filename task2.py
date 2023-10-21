@@ -52,13 +52,13 @@ def cost(y_pred, y_true):
     return torch.mean((y_pred - y_true) ** 2)
 
 
-# 定义两层的神经网络模型
+# 定义神经网络模型
 class ANN(torch.nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
         super(ANN, self).__init__()
         self.fc1 = torch.nn.Linear(input_size, hidden_size)
         self.fc2 = torch.nn.Linear(hidden_size, output_size)
-
+# 前向传播
     def forward(self, x):
         x = self.fc1(x)
         x = sigmoid(x)
