@@ -32,7 +32,7 @@ label_size = int(np.array(label.size()))
 # 搭建专属于你的神经网络 它有着两个隐藏层,一个输出层
 #请利用之前所学的知识,填写各层输入输出参数以及激活函数.
 #两个隐藏层均使用线性模型和relu激活函数 输出层使用softmax函数(dim参数设为1)(在下一行注释中写出softmax函数的作用哦)
-
+# softmax函数用于输出层的激活函数，得到样本属于每个类别的概率值
 class NET(nn.Module):
     def __init__(self, n_feature, n_hidden1, n_hidden2, n_output):
         super(NET, self).__init__()
